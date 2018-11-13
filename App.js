@@ -69,10 +69,11 @@ const AppNavigator = createBottomTabNavigator(
       },
     }),
     tabBarOptions: {
+      style: {
+        backgroundColor: 'red',
+      },
       activeTintColor: 'white',
       inactiveTintColor: 'black',
-      activeBackgroundColor: 'red',
-      inactiveBackgroundColor: 'red',
     },
   }
 );
