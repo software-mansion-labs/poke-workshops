@@ -291,6 +291,8 @@ const AppNavigator = createBottomTabNavigator({
 
 ```js
 // App.js
+import { Ionicons } from "@expo/vector-icons";
+//...
 const AppNavigator = createBottomTabNavigator(
   {
     FavPokemon: FavPokemonStack,
@@ -311,10 +313,10 @@ const AppNavigator = createBottomTabNavigator(
     }),
     tabBarOptions: {
       style: {
-        backgroundColor: 'red',
+        backgroundColor: "red"
       },
       activeTintColor: "white",
-      inactiveTintColor: "black",
+      inactiveTintColor: "black"
     }
   }
 );
