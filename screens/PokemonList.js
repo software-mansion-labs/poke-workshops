@@ -25,26 +25,42 @@ class ListButton extends React.PureComponent {
   }
 }
 
+const LIMIT = 20;
+
 export default class PokemonList extends React.Component {
   state = {
     loading: true,
     error: false,
-    pokemons: []
+    pokemons: [],
+    offset: 0,
+    loadingMore: false,
+    hasMoreToLoad: true
   };
 
-  fetchPokemons = async () => {
+  fetchPokemons = async (offset = 0) => {
     try {
       const response = await fetch(
-        "https://pokeapi.co/api/v2/pokemon?offset=0&limit=20"
+        `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${LIMIT}`
       );
       const json = await response.json();
       const { results } = json;
       this.setState({
         loading: false,
-        pokemons: results
+        pokemons: [...this.state.pokemons, ...results],
+        offset: offset + LIMIT,
+        loadingMore: false,
+        hasMoreToLoad: results.length > 0
       });
     } catch (err) {
-      this.setState({ loading: false, error: true });
+      this.setState({ loading: false, error: true, loadingMore: false });
+    }
+  };
+
+  loadMore = () => {
+    const { loadingMore, hasMoreToLoad, offset } = this.state;
+    if (!loadingMore && hasMoreToLoad) {
+      this.setState({ loadingMore: true });
+      this.fetchPokemons(offset);
     }
   };
 
@@ -62,7 +78,7 @@ export default class PokemonList extends React.Component {
     );
   };
 
-  keyExtractor = (item, index) => `${index}`;
+  keyExtractor = item => item.name;
 
   render() {
     if (this.state.loading) {
@@ -87,6 +103,7 @@ export default class PokemonList extends React.Component {
         keyExtractor={this.keyExtractor}
         data={this.state.pokemons}
         renderItem={this.renderPokemon}
+        onEndReached={this.loadMore}
       />
     );
   }
