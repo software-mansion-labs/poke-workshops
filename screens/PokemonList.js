@@ -1,18 +1,18 @@
-import * as React from 'react';
+import * as React from "react";
 import {
   Text,
   View,
   StyleSheet,
   ActivityIndicator,
-  FlatList,
-} from 'react-native';
-import { Constants } from 'expo';
-import { Button } from 'react-native-paper';
+  FlatList
+} from "react-native";
+import { Constants } from "expo";
+import { Button } from "react-native-paper";
 
 class ListButton extends React.PureComponent {
   onPress = () => {
-    this.props.navigation.navigate('Pokemon', {
-      url: this.props.url,
+    this.props.navigation.navigate("Pokemon", {
+      url: this.props.url
     });
   };
 
@@ -29,19 +29,19 @@ export default class PokemonList extends React.Component {
   state = {
     loading: true,
     error: false,
-    pokemons: [],
+    pokemons: []
   };
 
   fetchPokemons = async () => {
     try {
-      // unfotunately PokeApi has broken query/limit right now...
-      const response = await fetch('https://pokeapi.co/api/v2/pokemon/');
+      const response = await fetch(
+        "https://pokeapi.co/api/v2/pokemon?offset=0&limit=20"
+      );
       const json = await response.json();
       const { results } = json;
-      const pokemons = results.slice(0, 20); // makes more sense, but try out all results to see RN performance!
       this.setState({
         loading: false,
-        pokemons,
+        pokemons: results
       });
     } catch (err) {
       this.setState({ loading: false, error: true });
@@ -54,11 +54,15 @@ export default class PokemonList extends React.Component {
 
   renderPokemon = ({ item }) => {
     return (
-      <ListButton text={item.name} url={item.url} navigation={this.props.navigation} />
+      <ListButton
+        text={item.name}
+        url={item.url}
+        navigation={this.props.navigation}
+      />
     );
   };
 
-  keyExtractor = (item, index) => index;
+  keyExtractor = (item, index) => `${index}`;
 
   render() {
     if (this.state.loading) {
@@ -76,6 +80,7 @@ export default class PokemonList extends React.Component {
         </View>
       );
     }
+
     return (
       <FlatList
         style={styles.listContainer}
@@ -90,18 +95,18 @@ export default class PokemonList extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: Constants.statusBarHeight,
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: Constants.statusBarHeight
   },
   text: {
     fontSize: 30,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    margin: 5,
+    fontWeight: "bold",
+    textAlign: "center",
+    margin: 5
   },
   listContainer: {
-    backgroundColor: 'white',
-  },
+    backgroundColor: "white"
+  }
 });
