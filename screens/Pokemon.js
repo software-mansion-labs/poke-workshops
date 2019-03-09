@@ -47,7 +47,8 @@ export default class Pokemon extends React.Component {
     // in case of FavPokemon we don't have the url, it's hardcoded
     const route = this.getPokemonUrl() ? "PokemonDetails" : "FavPokemonDetails";
     this.props.navigation.navigate(route, {
-      details: this.state.pokemonDetails
+      details: this.state.pokemonDetails,
+      name: this.state.pokemonName
     });
   };
 

@@ -3,6 +3,12 @@ import { Text, View, StyleSheet } from "react-native";
 import { Constants } from "expo";
 
 export default class PokemonDetails extends React.Component {
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: navigation.getParam("name", "Pokedex")
+    };
+  };
+
   render() {
     const details = this.props.navigation.getParam("details");
 
