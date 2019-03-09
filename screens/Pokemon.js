@@ -69,6 +69,16 @@ export default class Pokemon extends React.Component {
 
     return (
       <View style={styles.container}>
+        {!this.getPokemonUrl() && (
+          <Text
+            style={[
+              styles.text,
+              { color: "red", marginBottom: 10, fontSize: 32 }
+            ]}
+          >
+            My favourite Pokemon
+          </Text>
+        )}
         <Text style={styles.text}>{this.state.pokemonName}</Text>
         <Image source={{ uri: this.state.pokemonImage }} style={styles.image} />
         <Button color="red" onPress={this.showDetails}>
@@ -90,7 +100,8 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 30,
     fontWeight: "bold",
-    textAlign: "center"
+    textAlign: "center",
+    textTransform: "capitalize"
   },
   image: {
     height: 200,
