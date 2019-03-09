@@ -26,7 +26,8 @@ export default class Pokemon extends React.Component {
       if (sprites && sprites.front_default) {
         img = sprites.front_default;
       }
-      const details = types.map(t => t.type.name);
+      const weight = `Weight: ${json.weight}`;
+      const details = ["Types:", ...types.map(t => t.type.name), weight];
       this.setState({
         loading: false,
         pokemonName: name,
