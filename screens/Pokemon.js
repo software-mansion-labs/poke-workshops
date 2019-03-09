@@ -18,7 +18,7 @@ export default class Pokemon extends React.Component {
     try {
       // you can hardcode your favourite Pokemon here :)
       const url =
-        this.getPokemonUrl() || "https://pokeapi.co/api/v2/pokemon/1/";
+        this.getPokemonUrl() || "https://pokeapi.co/api/v2/pokemon/62/";
       const response = await fetch(url);
       const json = await response.json();
       const { name, sprites, types } = json;
