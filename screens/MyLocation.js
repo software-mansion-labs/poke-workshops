@@ -1,6 +1,6 @@
 import * as React from "react";
 import { View, StyleSheet, Text, Button } from "react-native";
-import { Constants, Permissions } from "expo";
+import { Constants, Permissions, MapView } from "expo";
 
 export default class MyLocation extends React.Component {
   state = {
@@ -40,7 +40,10 @@ export default class MyLocation extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Text style={styles.text}>Permission granted! 😋</Text>
+        <MapView
+          style={styles.map}
+        >
+        </MapView>
       </View>
     );
   }
@@ -57,5 +60,8 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: "bold",
     textAlign: "center",
-  }
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
 });
