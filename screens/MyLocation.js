@@ -1,6 +1,7 @@
 import * as React from "react";
-import { View, StyleSheet, Text, Button } from "react-native";
+import { View, StyleSheet, Text, Button, Platform } from "react-native";
 import { Constants, Permissions, MapView, Location } from "expo";
+import { Ionicons } from "@expo/vector-icons";
 
 export default class MyLocation extends React.Component {
   state = {
@@ -12,11 +13,13 @@ export default class MyLocation extends React.Component {
       longitudeDelta: 0.0321
     },
     location: null,
+    buses: [],
   };
 
   componentDidMount() {
     this.askForPermission();
     this.getLocation();
+    this.fetchMPKData();
   }
 
   askForPermission = async () => {
@@ -29,8 +32,34 @@ export default class MyLocation extends React.Component {
     this.setState({ location });
   }
 
+  fetchMPKData = async () => {
+    const response = await fetch(
+      "http://91.223.13.70/internetservice/geoserviceDispatcher/services/vehicleinfo/vehicles",
+      {
+        headers: {
+          "content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+        },
+        body: "positionType=CORRECTED",
+        method: "POST"
+      }
+    );
+    const { vehicles } = await response.json();
+    const buses = vehicles
+      .filter(({ name }) => name && (name.startsWith("704") || name.startsWith("713")))
+      .map(({ name, longitude, latitude, id }) => ({
+        id: `bus_${id}`,
+        name,
+        coordinate: {
+          longitude: longitude / 3600000,
+          latitude: latitude / 3600000
+        }
+      }))
+    this.setState({ buses });
+    setTimeout(this.fetchMPKData, 5000);
+  }
+
   render() {
-    const { permissionGranted, location } = this.state;
+    const { permissionGranted, location, buses } = this.state;
 
     if (permissionGranted === null) {
       return (
@@ -63,6 +92,19 @@ export default class MyLocation extends React.Component {
               coordinate={location.coords}
             />
           )}
+          {buses.map(({ name, coordinate, id }) =>  (
+            <MapView.Marker
+              key={id}
+              title={name}
+              coordinate={coordinate}
+            >
+              <Ionicons
+                color="red"
+                size={20}
+                name={Platform.OS === "ios" ? "ios-car" : "md-car"}
+              />
+            </MapView.Marker>
+          ))}
         </MapView>
       </View>
     );
