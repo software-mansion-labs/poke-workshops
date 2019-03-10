@@ -1,14 +1,22 @@
 import * as React from "react";
 import { View, StyleSheet, Text, Button } from "react-native";
-import { Constants, Permissions, MapView } from "expo";
+import { Constants, Permissions, MapView, Location } from "expo";
 
 export default class MyLocation extends React.Component {
   state = {
     permissionGranted: null,
+    initialRegion: {
+      latitude: 50.06794023344194,
+      longitude: 19.91275659232019,
+      latitudeDelta: 0.0622,
+      longitudeDelta: 0.0321
+    },
+    location: null,
   };
 
   componentDidMount() {
-    this.askForPermission()
+    this.askForPermission();
+    this.getLocation();
   }
 
   askForPermission = async () => {
@@ -16,8 +24,13 @@ export default class MyLocation extends React.Component {
     this.setState({ permissionGranted: status === 'granted' });
   }
 
+  getLocation = async () => {
+    const location = await Location.getCurrentPositionAsync({});
+    this.setState({ location });
+  }
+
   render() {
-    const { permissionGranted } = this.state;
+    const { permissionGranted, location } = this.state;
 
     if (permissionGranted === null) {
       return (
@@ -42,7 +55,14 @@ export default class MyLocation extends React.Component {
       <View style={styles.container}>
         <MapView
           style={styles.map}
+          initialRegion={this.state.initialRegion}
         >
+          {location && (
+            <MapView.Marker
+              title="My Location"
+              coordinate={location.coords}
+            />
+          )}
         </MapView>
       </View>
     );
