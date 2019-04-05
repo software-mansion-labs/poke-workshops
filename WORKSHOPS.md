@@ -409,7 +409,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   }
 });
-});
 ```
 
 14. Let's improve our App UI a bit – you might have changed some colors for fun to match your Pokemon, but we will add some stylings to make the app look like a Pokeball.
