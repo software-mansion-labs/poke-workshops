@@ -356,14 +356,14 @@ export default class PokemonList extends React.Component {
 
   fetchPokemons = async () => {
     try {
-      // unfotunately PokeApi has broken query/limit right now, so we cannot explain paging...
-      const response = await fetch("https://pokeapi.co/api/v2/pokemon/");
+      const response = await fetch(
+        "https://pokeapi.co/api/v2/pokemon/?limit=20"
+      ); // 20 makes most sense, but try out more results to see RN performance!
       const json = await response.json();
       const { results } = json;
-      const pokemons = results.slice(0, 20); // makes more sense, but try out all results to see RN performance!
       this.setState({
         loading: false,
-        pokemons
+        pokemons: results
       });
     } catch (err) {
       this.setState({ loading: false, error: true });
@@ -431,7 +431,6 @@ const styles = StyleSheet.create({
 
 ```js
 // App.js
-import { Ionicons } from '@expo/vector-icons';
 
 // let's extract some common options for both stacks
 const stackNavigationOptions = {
@@ -446,15 +445,16 @@ const stackNavigationOptions = {
 const FavPokemonStack = createStackNavigator(
   {
     FavPokemon: {
-      screen: Pokemon
+      screen: Pokemon,
+      navigationOptions: stackNavigationOptions
     },
     FavPokemonDetails: {
-      screen: PokemonDetails
+      screen: PokemonDetails,
+      navigationOptions: stackNavigationOptions
     }
   },
   {
-    initialRouteName: "FavPokemon",
-    navigationOptions: stackNavigationOptions
+    initialRouteName: "FavPokemon"
   }
 );
 
@@ -462,19 +462,19 @@ const FavPokemonStack = createStackNavigator(
 const PokemonListStack = createStackNavigator(
   {
     PokemonList: {
-      screen: PokemonList
+      screen: PokemonList,
+      navigationOptions: stackNavigationOptions
     }
   },
   {
-    initialRouteName: "PokemonList",
-    navigationOptions: stackNavigationOptions
+    initialRouteName: "PokemonList"
   }
 );
 
 // Change PokemonList -> PokemonListStack
-const AppNavigator = createBottomTabNavigator(
-  FavPokemon: FavPokemonStack,
-  Pokemons: PokemonListStack
+const AppNavigator = createBottomTabNavigator({
+    FavPokemon: FavPokemonStack,
+    Pokemons: PokemonListStack,
 ```
 
 ```js
@@ -514,18 +514,20 @@ const AppNavigator = createBottomTabNavigator(
 const PokemonListStack = createStackNavigator(
   {
     PokemonList: {
-      screen: PokemonList
+      screen: PokemonList,
+      navigationOptions: stackNavigationOptions
     },
     Pokemon: {
-      screen: Pokemon
+      screen: Pokemon,
+      navigationOptions: stackNavigationOptions
     },
     PokemonDetails: {
-      screen: PokemonDetails
+      screen: PokemonDetails,
+      navigationOptions: stackNavigationOptions
     }
   },
   {
-    initialRouteName: "PokemonList",
-    navigationOptions: stackNavigationOptions
+    initialRouteName: "PokemonList"
   }
 );
 ```
