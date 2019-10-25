@@ -5,7 +5,7 @@ import "regenerator-runtime";
 
 export default class PokemonDetails extends React.Component {
   render() {
-   const details = this.props.navigation.getParam('details');
+    const details = this.props.navigation.getParam("details");
     if (!details) {
       return (
         <View style={styles.container}>

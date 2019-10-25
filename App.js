@@ -1,3 +1,4 @@
+// App.js
 import * as React from "react";
 import Pokemon from "./screens/Pokemon";
 import PokemonDetails from "./screens/PokemonDetails";
@@ -21,33 +22,37 @@ const stackNavigationOptions = {
 const FavPokemonStack = createStackNavigator(
   {
     FavPokemon: {
-      screen: Pokemon
+      screen: Pokemon,
+      navigationOptions: stackNavigationOptions
     },
     FavPokemonDetails: {
-      screen: PokemonDetails
+      screen: PokemonDetails,
+      navigationOptions: stackNavigationOptions
     }
   },
   {
-    initialRouteName: "FavPokemon",
-    navigationOptions: stackNavigationOptions
+    initialRouteName: "FavPokemon"
   }
 );
 
+// We have only one screen here, but we want the header and we will add more screens soon
 const PokemonListStack = createStackNavigator(
   {
     PokemonList: {
-      screen: PokemonList
+      screen: PokemonList,
+      navigationOptions: stackNavigationOptions
     },
     Pokemon: {
-      screen: Pokemon
+      screen: Pokemon,
+      navigationOptions: stackNavigationOptions
     },
     PokemonDetails: {
-      screen: PokemonDetails
+      screen: PokemonDetails,
+      navigationOptions: stackNavigationOptions
     }
   },
   {
-    initialRouteName: "PokemonList",
-    navigationOptions: stackNavigationOptions
+    initialRouteName: "PokemonList"
   }
 );
 

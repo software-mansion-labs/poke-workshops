@@ -1,3 +1,4 @@
+// App.js
 import * as React from "react";
 import { Text, View, StyleSheet, ActivityIndicator, Image } from "react-native";
 import Constants from "expo-constants";
