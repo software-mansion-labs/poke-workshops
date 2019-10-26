@@ -165,7 +165,10 @@ const styles = StyleSheet.create({
 
 ```js
 // package.json
-"react-navigation": "3.0.0-rc.5",
+    "react-navigation": "4.0.10",
+    "react-navigation-tabs": "2.5.6",
+    "react-navigation-stack": "1.10.3",
+    "react-navigation-drawer": "2.3.1"
 ```
 
 ```js
@@ -173,7 +176,8 @@ const styles = StyleSheet.create({
 import * as React from "react";
 import Pokemon from "./screens/Pokemon";
 import PokemonDetails from "./screens/PokemonDetails";
-import { createAppContainer, createStackNavigator } from "react-navigation";
+import { createAppContainer } from "react-navigation";
+import { createStackNavigator } from "react-navigation-stack";
 
 const FavPokemonStack = createStackNavigator({
   FavPokemon: {
@@ -240,11 +244,7 @@ return (
 
 ```js
 // App.js
-import {
-  createAppContainer,
-  createStackNavigator,
-  createBottomTabNavigator
-} from "react-navigation";
+import { createBottomTabNavigator } from "react-navigation-tabs";
 //...
 
 const AppNavigator = createBottomTabNavigator({
@@ -454,6 +454,7 @@ const FavPokemonStack = createStackNavigator(
     }
   },
   {
+    headerLayoutPreset: 'center',
     initialRouteName: "FavPokemon"
   }
 );
@@ -467,6 +468,7 @@ const PokemonListStack = createStackNavigator(
     }
   },
   {
+    headerLayoutPreset: 'center',
     initialRouteName: "PokemonList"
   }
 );
@@ -527,6 +529,7 @@ const PokemonListStack = createStackNavigator(
     }
   },
   {
+    headerLayoutPreset: "center",
     initialRouteName: "PokemonList"
   }
 );
@@ -556,7 +559,6 @@ renderPokemon = ({ item }) => {
 
 ```js
 // screens/PokemonList.js
-import { Button } from 'react-native-paper';
 
 class ListButton extends React.PureComponent {
   onPress = () => {
