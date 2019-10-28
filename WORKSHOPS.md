@@ -198,38 +198,46 @@ export default createAppContainer(FavPokemonStack);
 import { Button } from "react-native-paper";
 
 // we have to get PokemonDetails from API response
-  fetchPokemonData = async () => {
-    try {
-      const response = await fetch('https://pokeapi.co/api/v2/pokemon/1/');
-      const json = await response.json();
-      const { name, sprites, types } = json;
-      let img;
-      if (sprites && sprites.front_default) {
-        img = sprites.front_default;
-      }
-      const details = types.map(t => t.type.name);
-      this.setState({
-        loading: false,
-        pokemonName: name,
-        pokemonImage: img,
-        pokemonDetails: details,
-      });
+fetchPokemonData = async () => {
+  try {
+    const response = await fetch("https://pokeapi.co/api/v2/pokemon/1/");
+    const json = await response.json();
+    const { name, sprites, types } = json;
+    let img;
+    if (sprites && sprites.front_default) {
+      img = sprites.front_default;
+    }
+    const details = types.map(t => t.type.name);
+    this.setState({
+      loading: false,
+      pokemonName: name,
+      pokemonImage: img,
+      pokemonDetails: details
+    });
+  } catch (err) {
+    this.setState({ loading: false, error: true });
+  }
+};
+
+//...
 
 // render
 return (
-      <View style={styles.container}>
-        <Text style={styles.text}>{this.state.pokemonName}</Text>
-        <Image source={{ uri: this.state.pokemonImage }} style={styles.image} />
-        <Button onPress={() => {
-          // // add button which navigates to the new screen with saved details
-          this.props.navigation.navigate('FavPokemonDetails', {
-            details: this.state.pokemonDetails,
-          })
-        }}>
-          Show details
-        </Button>
-      </View>
-    );
+  <View style={styles.container}>
+    <Text style={styles.text}>{this.state.pokemonName}</Text>
+    <Image source={{ uri: this.state.pokemonImage }} style={styles.image} />
+    <Button
+      onPress={() => {
+        // // add button which navigates to the new screen with saved details
+        this.props.navigation.navigate("FavPokemonDetails", {
+          details: this.state.pokemonDetails
+        });
+      }}
+    >
+      Show details
+    </Button>
+  </View>
+);
 ```
 
 ```js
