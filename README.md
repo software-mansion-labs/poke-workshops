@@ -4,7 +4,7 @@ Start here:
 https://snack.expo.io
 
 You can see a complete app here:
-https://snack.expo.io/@quinlanj/poke-workshops
+https://snack.expo.io/@quinlanj/poke-workshops2
 
 # Sample Snack app
 
