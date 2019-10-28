@@ -1,19 +1,17 @@
-// App.js
 import * as React from "react";
 import Pokemon from "./screens/Pokemon";
 import PokemonDetails from "./screens/PokemonDetails";
 import PokemonList from "./screens/PokemonList";
-import {
-  createAppContainer,
-  createStackNavigator,
-  createBottomTabNavigator
-} from "react-navigation";
+import { createAppContainer } from "react-navigation";
+import { createStackNavigator } from 'react-navigation-stack';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { Ionicons } from "@expo/vector-icons";
 
+// let's extract some common options for both stacks
 const stackNavigationOptions = {
   title: "Pokedex",
   headerStyle: {
-    backgroundColor: "red"
+    backgroundColor: "red",
   },
   headerTintColor: "white",
   headerBackTitle: null
@@ -31,11 +29,11 @@ const FavPokemonStack = createStackNavigator(
     }
   },
   {
+    headerLayoutPreset: 'center',
     initialRouteName: "FavPokemon"
   }
 );
 
-// We have only one screen here, but we want the header and we will add more screens soon
 const PokemonListStack = createStackNavigator(
   {
     PokemonList: {
@@ -52,6 +50,7 @@ const PokemonListStack = createStackNavigator(
     }
   },
   {
+    headerLayoutPreset: 'center',
     initialRouteName: "PokemonList"
   }
 );
@@ -84,4 +83,5 @@ const AppNavigator = createBottomTabNavigator(
   }
 );
 
+// we can remove unnecessary App Component
 export default createAppContainer(AppNavigator);

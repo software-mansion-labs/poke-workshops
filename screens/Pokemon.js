@@ -1,4 +1,3 @@
-// App.js
 import * as React from "react";
 import { Text, View, StyleSheet, ActivityIndicator, Image } from "react-native";
 import Constants from "expo-constants";
@@ -13,11 +12,11 @@ export default class App extends React.Component {
     pokemonImage: null
   };
 
-  getNavUrl = () => this.props.navigation.getParam("url");
+  getNavUrl = () => this.props.navigation.getParam('url');
 
   fetchPokemonData = async () => {
     try {
-      const url = this.getNavUrl() || "https://pokeapi.co/api/v2/pokemon/1/";
+      const url = this.getNavUrl() || 'https://pokeapi.co/api/v2/pokemon/1/';
       const response = await fetch(url);
       const json = await response.json();
       const { name, sprites, types } = json;
@@ -30,7 +29,7 @@ export default class App extends React.Component {
         loading: false,
         pokemonName: name,
         pokemonImage: img,
-        pokemonDetails: details
+        pokemonDetails: details,
       });
     } catch (err) {
       this.setState({ loading: false, error: true });
@@ -62,17 +61,12 @@ export default class App extends React.Component {
       <View style={styles.container}>
         <Text style={styles.text}>{this.state.pokemonName}</Text>
         <Image source={{ uri: this.state.pokemonImage }} style={styles.image} />
-        <Button
-          color="red"
-          onPress={() => {
-            const route = this.getNavUrl()
-              ? "PokemonDetails"
-              : "FavPokemonDetails";
-            this.props.navigation.navigate(route, {
-              details: this.state.pokemonDetails
-            });
-          }}
-        >
+        <Button color="red" onPress={() => {
+          const route = this.getNavUrl() ? 'PokemonDetails' : 'FavPokemonDetails';
+          this.props.navigation.navigate(route, {
+            details: this.state.pokemonDetails,
+          })
+        }}>
           Show details
         </Button>
       </View>

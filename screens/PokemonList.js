@@ -11,8 +11,8 @@ import { Button } from "react-native-paper";
 
 class ListButton extends React.PureComponent {
   onPress = () => {
-    this.props.navigation.navigate("Pokemon", {
-      url: this.props.url
+    this.props.navigation.navigate('Pokemon', {
+      url: this.props.url,
     });
   };
 
@@ -55,11 +55,7 @@ export default class PokemonList extends React.Component {
   renderPokemon = ({ item }) => {
     // we have to manually pass navigation
     return (
-      <ListButton
-        text={item.name}
-        url={item.url}
-        navigation={this.props.navigation}
-      />
+      <ListButton text={item.name} url={item.url} navigation={this.props.navigation} />
     );
   };
 

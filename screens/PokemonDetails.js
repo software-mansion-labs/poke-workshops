@@ -4,8 +4,10 @@ import Constants from "expo-constants";
 import "regenerator-runtime";
 
 export default class PokemonDetails extends React.Component {
-  render() {
-    const details = this.props.navigation.getParam("details");
+    render() {
+    // we have to get details from navigation params, not props
+    // under the hood it is this.props.navigation.state.params
+    const details = this.props.navigation.getParam('details');
     if (!details) {
       return (
         <View style={styles.container}>
