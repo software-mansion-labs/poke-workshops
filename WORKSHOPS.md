@@ -14,7 +14,8 @@
 // App.js
 import * as React from "react";
 import { Text, View, StyleSheet, ActivityIndicator, Image } from "react-native";
-import { Constants } from "expo";
+import Constants from "expo-constants";
+import "regenerator-runtime";
 
 export default class App extends React.Component {
   state = {
@@ -93,6 +94,13 @@ const styles = StyleSheet.create({
 });
 ```
 
+In `package.json`, add the newest version of `regenerator-runtime`.
+
+```js
+// package.json
+"regenerator-runtime": "0.13.3"
+```
+
 6. This app looks kinda static – it's about time to add some navigation. Move the code from `App.js` to a new file `screens/Pokemon.js`, and change `App.js` to:
 
 ```js
@@ -113,7 +121,8 @@ export default class App extends React.Component {
 // screens/PokemonDetails.js
 import * as React from "react";
 import { Text, View, StyleSheet } from "react-native";
-import { Constants } from "expo";
+import Constants from "expo-constants";
+import "regenerator-runtime";
 
 export default class PokemonDetails extends React.Component {
   render() {
@@ -156,7 +165,10 @@ const styles = StyleSheet.create({
 
 ```js
 // package.json
-"react-navigation": "2.18.2"
+    "react-navigation": "4.0.10",
+    "react-navigation-tabs": "2.5.6",
+    "react-navigation-stack": "1.10.3",
+    "react-navigation-drawer": "2.3.1"
 ```
 
 ```js
@@ -164,7 +176,8 @@ const styles = StyleSheet.create({
 import * as React from "react";
 import Pokemon from "./screens/Pokemon";
 import PokemonDetails from "./screens/PokemonDetails";
-import { createStackNavigator } from "react-navigation";
+import { createAppContainer } from "react-navigation";
+import { createStackNavigator } from "react-navigation-stack";
 
 const FavPokemonStack = createStackNavigator({
   FavPokemon: {
@@ -175,11 +188,7 @@ const FavPokemonStack = createStackNavigator({
   }
 });
 
-export default class App extends React.Component {
-  render() {
-    return <FavPokemonStack />;
-  }
-}
+export default createAppContainer(FavPokemonStack);
 ```
 
 9. Now we have to navigate from `screens/Pokemon.js` to `screens/PokemonDetails.js`. We will use a nice Button from `react-native-paper` components package, which was already provided in Snack example:
@@ -189,38 +198,46 @@ export default class App extends React.Component {
 import { Button } from "react-native-paper";
 
 // we have to get PokemonDetails from API response
-  fetchPokemonData = async () => {
-    try {
-      const response = await fetch('https://pokeapi.co/api/v2/pokemon/1/');
-      const json = await response.json();
-      const { name, sprites, types } = json;
-      let img;
-      if (sprites && sprites.front_default) {
-        img = sprites.front_default;
-      }
-      const details = types.map(t => t.type.name);
-      this.setState({
-        loading: false,
-        pokemonName: name,
-        pokemonImage: img,
-        pokemonDetails: details,
-      });
+fetchPokemonData = async () => {
+  try {
+    const response = await fetch("https://pokeapi.co/api/v2/pokemon/1/");
+    const json = await response.json();
+    const { name, sprites, types } = json;
+    let img;
+    if (sprites && sprites.front_default) {
+      img = sprites.front_default;
+    }
+    const details = types.map(t => t.type.name);
+    this.setState({
+      loading: false,
+      pokemonName: name,
+      pokemonImage: img,
+      pokemonDetails: details
+    });
+  } catch (err) {
+    this.setState({ loading: false, error: true });
+  }
+};
+
+//...
 
 // render
 return (
-      <View style={styles.container}>
-        <Text style={styles.text}>{this.state.pokemonName}</Text>
-        <Image source={{ uri: this.state.pokemonImage }} style={styles.image} />
-        <Button onPress={() => {
-          // // add button which navigates to the new screen with saved details
-          this.props.navigation.navigate('FavPokemonDetails', {
-            details: this.state.pokemonDetails,
-          })
-        }}>
-          Show details
-        </Button>
-      </View>
-    );
+  <View style={styles.container}>
+    <Text style={styles.text}>{this.state.pokemonName}</Text>
+    <Image source={{ uri: this.state.pokemonImage }} style={styles.image} />
+    <Button
+      onPress={() => {
+        // // add button which navigates to the new screen with saved details
+        this.props.navigation.navigate("FavPokemonDetails", {
+          details: this.state.pokemonDetails
+        });
+      }}
+    >
+      Show details
+    </Button>
+  </View>
+);
 ```
 
 ```js
@@ -235,12 +252,15 @@ return (
 
 ```js
 // App.js
+import { createBottomTabNavigator } from "react-navigation-tabs";
+//...
+
 const AppNavigator = createBottomTabNavigator({
   FavPokemon: FavPokemonStack
 });
 
 // we can remove unnecessary App Component
-export default AppNavigator;
+export default createAppContainer(AppNavigator);
 ```
 
 11. One tab looks kinda bad, so let's add another one with and a new screen, which will display a list of Pokemons `screens/PokemonList.js`:
@@ -249,7 +269,7 @@ export default AppNavigator;
 // screens/PokemonList.js
 import * as React from "react";
 import { Text, View, StyleSheet } from "react-native";
-import { Constants } from "expo";
+import Constants from "expo-constants";
 
 export default class PokemonList extends React.Component {
   render() {
@@ -299,7 +319,7 @@ const AppNavigator = createBottomTabNavigator(
     Pokemons: PokemonList
   },
   {
-    navigationOptions: ({ navigation }) => ({
+    defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused, horizontal, tintColor }) => {
         const { routeName } = navigation.state;
         let iconName;
@@ -325,27 +345,33 @@ const AppNavigator = createBottomTabNavigator(
 13. The app looks much better. But `screens/PokemonList.js` doesn't display anything interesting – let's implement it, so it will show a list of Pokemons.
 
 ```js
-import * as React from 'react';
-import { Text, View, StyleSheet, ActivityIndicator, FlatList } from 'react-native';
-import { Constants } from 'expo';
+import * as React from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  FlatList
+} from "react-native";
+import Constants from "expo-constants";
 
 export default class PokemonList extends React.Component {
   state = {
     loading: true,
     error: false,
-    pokemons: [],
-  }
+    pokemons: []
+  };
 
   fetchPokemons = async () => {
     try {
-      // unfotunately PokeApi has broken query/limit right now, so we cannot explain paging...
-      const response = await fetch('https://pokeapi.co/api/v2/pokemon/');
+      const response = await fetch(
+        "https://pokeapi.co/api/v2/pokemon/?limit=20"
+      ); // 20 makes most sense, but try out more results to see RN performance!
       const json = await response.json();
       const { results } = json;
-      const pokemons = results.slice(0, 20); // makes more sense, but try out all results to see RN performance!
       this.setState({
         loading: false,
-        pokemons,
+        pokemons: results
       });
     } catch (err) {
       this.setState({ loading: false, error: true });
@@ -357,10 +383,8 @@ export default class PokemonList extends React.Component {
   }
 
   renderPokemon = ({ item }) => {
-    return (
-      <Text style={styles.text}>{item.name}</Text>
-    );
-  }
+    return <Text style={styles.text}>{item.name}</Text>;
+  };
 
   keyExtractor = (item, index) => index;
 
@@ -368,7 +392,7 @@ export default class PokemonList extends React.Component {
     if (this.state.loading) {
       return (
         <View style={styles.container}>
-          <ActivityIndicator color="red"/>
+          <ActivityIndicator color="red" />
         </View>
       );
     }
@@ -394,21 +418,20 @@ export default class PokemonList extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: Constants.statusBarHeight,
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: Constants.statusBarHeight
   },
   text: {
     fontSize: 30,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    margin: 5,
+    fontWeight: "bold",
+    textAlign: "center",
+    margin: 5
   },
   listContainer: {
-    backgroundColor: 'white',
+    backgroundColor: "white"
   }
-});
 });
 ```
 
@@ -416,7 +439,6 @@ const styles = StyleSheet.create({
 
 ```js
 // App.js
-import { Ionicons } from '@expo/vector-icons';
 
 // let's extract some common options for both stacks
 const stackNavigationOptions = {
@@ -431,15 +453,17 @@ const stackNavigationOptions = {
 const FavPokemonStack = createStackNavigator(
   {
     FavPokemon: {
-      screen: Pokemon
+      screen: Pokemon,
+      navigationOptions: stackNavigationOptions
     },
     FavPokemonDetails: {
-      screen: PokemonDetails
+      screen: PokemonDetails,
+      navigationOptions: stackNavigationOptions
     }
   },
   {
-    initialRouteName: "FavPokemon",
-    navigationOptions: stackNavigationOptions
+    headerLayoutPreset: 'center',
+    initialRouteName: "FavPokemon"
   }
 );
 
@@ -447,16 +471,20 @@ const FavPokemonStack = createStackNavigator(
 const PokemonListStack = createStackNavigator(
   {
     PokemonList: {
-      screen: PokemonList
+      screen: PokemonList,
+      navigationOptions: stackNavigationOptions
     }
   },
   {
-    initialRouteName: "PokemonList",
-    navigationOptions: stackNavigationOptions
+    headerLayoutPreset: 'center',
+    initialRouteName: "PokemonList"
   }
 );
 
-const AppNavigator = createBottomTabNavigator(
+// Change PokemonList -> PokemonListStack
+const AppNavigator = createBottomTabNavigator({
+    FavPokemon: FavPokemonStack,
+    Pokemons: PokemonListStack,
 ```
 
 ```js
@@ -496,24 +524,29 @@ const AppNavigator = createBottomTabNavigator(
 const PokemonListStack = createStackNavigator(
   {
     PokemonList: {
-      screen: PokemonList
+      screen: PokemonList,
+      navigationOptions: stackNavigationOptions
     },
     Pokemon: {
-      screen: Pokemon
+      screen: Pokemon,
+      navigationOptions: stackNavigationOptions
     },
     PokemonDetails: {
-      screen: PokemonDetails
+      screen: PokemonDetails,
+      navigationOptions: stackNavigationOptions
     }
   },
   {
-    initialRouteName: "PokemonList",
-    navigationOptions: stackNavigationOptions
+    headerLayoutPreset: "center",
+    initialRouteName: "PokemonList"
   }
 );
 ```
 
 ```js
 // screens/PokemonList.js
+import { Button } from "react-native-paper";
+//...
 renderPokemon = ({ item }) => {
   return (
     <Button
@@ -534,7 +567,6 @@ renderPokemon = ({ item }) => {
 
 ```js
 // screens/PokemonList.js
-import { Button } from 'react-native-paper';
 
 class ListButton extends React.PureComponent {
   onPress = () => {

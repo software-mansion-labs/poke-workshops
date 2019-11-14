@@ -1,9 +1,12 @@
-import * as React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
-import { Constants } from 'expo';
+import * as React from "react";
+import { Text, View, StyleSheet } from "react-native";
+import Constants from "expo-constants";
+import "regenerator-runtime";
 
 export default class PokemonDetails extends React.Component {
-  render() {
+    render() {
+    // we have to get details from navigation params, not props
+    // under the hood it is this.props.navigation.state.params
     const details = this.props.navigation.getParam('details');
     if (!details) {
       return (
@@ -15,7 +18,9 @@ export default class PokemonDetails extends React.Component {
 
     return (
       <View style={styles.container}>
-        {details.map(detail => (<Text style={styles.text}>{detail}</Text>))}
+        {details.map(detail => (
+          <Text style={styles.text}>{detail}</Text>
+        ))}
       </View>
     );
   }
@@ -24,14 +29,14 @@ export default class PokemonDetails extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: Constants.statusBarHeight,
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: Constants.statusBarHeight
   },
   text: {
     fontSize: 30,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
+    fontWeight: "bold",
+    textAlign: "center"
+  }
 });

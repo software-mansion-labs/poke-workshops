@@ -1,34 +1,36 @@
-import * as React from 'react';
-import Pokemon from './screens/Pokemon';
-import PokemonDetails from './screens/PokemonDetails';
-import PokemonList from './screens/PokemonList';
-import {
-  createStackNavigator,
-  createBottomTabNavigator,
-} from 'react-navigation';
-import { Ionicons } from '@expo/vector-icons';
+import * as React from "react";
+import Pokemon from "./screens/Pokemon";
+import PokemonDetails from "./screens/PokemonDetails";
+import PokemonList from "./screens/PokemonList";
+import { createAppContainer } from "react-navigation";
+import { createStackNavigator } from 'react-navigation-stack';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
+import { Ionicons } from "@expo/vector-icons";
 
+// let's extract some common options for both stacks
 const stackNavigationOptions = {
-  title: 'Pokedex',
+  title: "Pokedex",
   headerStyle: {
-    backgroundColor: 'red',
+    backgroundColor: "red",
   },
-  headerTintColor: 'white',
-  headerBackTitle: null,
+  headerTintColor: "white",
+  headerBackTitle: null
 };
 
 const FavPokemonStack = createStackNavigator(
   {
     FavPokemon: {
       screen: Pokemon,
+      navigationOptions: stackNavigationOptions
     },
     FavPokemonDetails: {
       screen: PokemonDetails,
-    },
+      navigationOptions: stackNavigationOptions
+    }
   },
   {
-    initialRouteName: 'FavPokemon',
-    navigationOptions: stackNavigationOptions,
+    headerLayoutPreset: 'center',
+    initialRouteName: "FavPokemon"
   }
 );
 
@@ -36,46 +38,50 @@ const PokemonListStack = createStackNavigator(
   {
     PokemonList: {
       screen: PokemonList,
+      navigationOptions: stackNavigationOptions
     },
     Pokemon: {
       screen: Pokemon,
+      navigationOptions: stackNavigationOptions
     },
     PokemonDetails: {
       screen: PokemonDetails,
-    },
+      navigationOptions: stackNavigationOptions
+    }
   },
   {
-    initialRouteName: 'PokemonList',
-    navigationOptions: stackNavigationOptions,
+    headerLayoutPreset: 'center',
+    initialRouteName: "PokemonList"
   }
 );
 
 const AppNavigator = createBottomTabNavigator(
   {
     FavPokemon: FavPokemonStack,
-    Pokemons: PokemonListStack,
+    Pokemons: PokemonListStack
   },
   {
-    navigationOptions: ({ navigation }) => ({
+    defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused, horizontal, tintColor }) => {
         const { routeName } = navigation.state;
         let iconName;
-        if (routeName === 'FavPokemon') {
+        if (routeName === "FavPokemon") {
           iconName = `ios-heart`;
-        } else if (routeName === 'Pokemons') {
+        } else if (routeName === "Pokemons") {
           iconName = `ios-bug`;
         }
         return <Ionicons name={iconName} size={25} color={tintColor} />;
-      },
+      }
     }),
     tabBarOptions: {
       style: {
-        backgroundColor: 'red',
+        backgroundColor: "red"
       },
-      activeTintColor: 'white',
-      inactiveTintColor: 'black',
-    },
+      activeTintColor: "white",
+      inactiveTintColor: "black"
+    }
   }
 );
 
-export default AppNavigator;
+// we can remove unnecessary App Component
+export default createAppContainer(AppNavigator);

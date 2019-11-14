@@ -1,15 +1,15 @@
-import * as React from 'react';
-import { Text, View, StyleSheet, ActivityIndicator, Image } from 'react-native';
-import { Constants } from 'expo';
-import { Button } from 'react-native-paper';
+import * as React from "react";
+import { Text, View, StyleSheet, ActivityIndicator, Image } from "react-native";
+import Constants from "expo-constants";
+import "regenerator-runtime";
+import { Button } from "react-native-paper";
 
-export default class Pokemon extends React.Component {
+export default class App extends React.Component {
   state = {
     loading: true,
     error: false,
     pokemonName: null,
-    pokemonImage: null,
-    pokemonDetails: null,
+    pokemonImage: null
   };
 
   getNavUrl = () => this.props.navigation.getParam('url');
@@ -44,7 +44,7 @@ export default class Pokemon extends React.Component {
     if (this.state.loading) {
       return (
         <View style={styles.container}>
-          <ActivityIndicator color="red"/>
+          <ActivityIndicator color="red" />
         </View>
       );
     }
@@ -77,18 +77,18 @@ export default class Pokemon extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: Constants.statusBarHeight,
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: Constants.statusBarHeight
   },
   text: {
     fontSize: 30,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center"
   },
   image: {
     height: 200,
-    width: 200,
-  },
+    width: 200
+  }
 });
